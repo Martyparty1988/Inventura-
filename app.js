@@ -5,25 +5,29 @@ let appState = {
         bigBuns: 0,
         smallBuns: 0,
         tacos: 0,
-        ribs: 0
+        ribs: 0,
+        fries: 0
     },
     sales: {
         tacos: 0,
         burgers: 0,
         miniburgers: 0,
-        ribs: 0
+        ribs: 0,
+        fries: 0
     },
     writeOffs: {
         bigBuns: 0,
         smallBuns: 0,
         tacos: 0,
-        ribs: 0
+        ribs: 0,
+        fries: 0
     },
     freeMeals: {
         bigBuns: 0,
         smallBuns: 0,
         tacos: 0,
-        ribs: 0
+        ribs: 0,
+        fries: 0
     },
     ribsLossPercent: 15,
     shiftHistory: []
@@ -157,8 +161,9 @@ function saveInitialInventory() {
     const smallBuns = parseInt(document.getElementById('initSmallBuns').value) || 0;
     const tacos = parseInt(document.getElementById('initTacos').value) || 0;
     const ribs = parseFloat(document.getElementById('initRibs').value) || 0;
+    const fries = parseFloat(document.getElementById('initFries').value) || 0;
 
-    appState.inventory = { bigBuns, smallBuns, tacos, ribs };
+    appState.inventory = { bigBuns, smallBuns, tacos, ribs, fries };
     
     // Reset sales and write-offs for new shift
     appState.sales = { tacos: 0, burgers: 0, miniburgers: 0, ribs: 0 };
