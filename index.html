@@ -1,283 +1,60 @@
-<!DOCTYPE html>
-<html lang="cs">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Food Truck Inventura</title>
-    <link rel="stylesheet" href="style.css">
-    <link rel="manifest" href="manifest.json">
-    <meta name="theme-color" content="#FF6B35">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="default">
-    <meta name="apple-mobile-web-app-title" content="Food Truck">
-    <link rel="apple-touch-icon" href="icon-192x192.png">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
-</head>
-<body>
-    <div id="app">
-        <!-- Header -->
-        <header class="header">
-            <h1>🚚 Food Truck Inventura</h1>
-            <div class="header-controls">
-                <button id="themeToggle" class="theme-toggle">🌙</button>
-                <button id="exportBtn" class="export-btn">📊</button>
-            </div>
-        </header>
+🚚 Food Truck Inventura
+🌙 📊
+Začátek směny Inventura Prodej Reporty
+Začátek směny
+Datum:
+Místo akce:
+Zaměstnanci (2-3 osoby):
+Hotovost v pokladně na začátku (Kč):
+Začít směnu
+Aktuální zásoby
+Velké bulky: 0
+Malé bulky: 0
+Tacos: 0
+Žebra (kg): 0.0
+Hranolky (kg): 0.0
+Úbytek váhy žebra
+Automatický odhad 15% úbytku po dopečení (250°C) a udržování (70°C, 30% páry)
+Úbytek (%): 15%
+Žebra po úbytku: 0.0 kg
+Aplikovat úbytek
+Odpisy a svačiny zdarma
+📝 Odpisy 🍽️ Svačiny zdarma
+Odpisy
+Velké bulky:
+Malé bulky:
+Tacos:
+Žebra (kg):
+Hranolky (kg):
+Uložit odpisy Zrušit
+Svačiny zdarma
+Velké bulky:
+Malé bulky:
+Tacos:
+Žebra (kg):
+Hranolky (kg):
+Uložit svačiny Zrušit
+🌮 Tacos
+- 1 +
+Prodat tacos
+🍔 Burger
+- 1 +
+Prodat burger
+🍔 Miniburger
+- 1 +
+Prodat miniburger
+🍖 Žebra
+Váha (kg):
+Prodat žebra
+🍟 Hranolky
+Váha (kg):
+Prodat hranolky
+Konec směny
+Hotovost v pokladně na konci (Kč):
+Ukončit směnu
+📊 Grafy a statistiky
 
-        <!-- Navigation -->
-        <nav class="nav-tabs">
-            <button class="nav-btn active" data-tab="shift-start">Začátek směny</button>
-            <button class="nav-btn" data-tab="inventory">Inventura</button>
-            <button class="nav-btn" data-tab="sales">Prodej</button>
-            <button class="nav-btn" data-tab="reports">Reporty</button>
-        </nav>
 
-        <!-- Shift Start Tab -->
-        <div id="shift-start" class="tab-content active">
-            <div class="card">
-                <h2>Začátek směny</h2>
-                <div class="form-group">
-                    <label>Datum:</label>
-                    <input type="date" id="shiftDate" required>
-                </div>
-                <div class="form-group">
-                    <label>Místo akce:</label>
-                    <input type="text" id="location" placeholder="Např. Náměstí Svobody" required>
-                </div>
-                <div class="form-group">
-                    <label>Zaměstnanci (2-3 osoby):</label>
-                    <input type="text" id="employee1" placeholder="Jméno 1" required>
-                    <input type="text" id="employee2" placeholder="Jméno 2" required>
-                    <input type="text" id="employee3" placeholder="Jméno 3 (volitelné)">
-                </div>
-                <div class="form-group">
-                    <label>Hotovost v pokladně na začátku (Kč):</label>
-                    <input type="number" id="startCash" placeholder="0" min="0" step="0.01">
-                </div>
-                <button id="startShift" class="btn-primary">Začít směnu</button>
-            </div>
+Historie směn
 
-            <!-- Initial Inventory -->
-            <div id="initialInventory" class="card" style="display: none;">
-                <h2>Počáteční stavy</h2>
-                <div class="inventory-grid">
-                    <div class="inventory-item">
-                        <label>Velké bulky:</label>
-                        <input type="number" id="initBigBuns" placeholder="0" min="0">
-                    </div>
-                    <div class="inventory-item">
-                        <label>Malé bulky:</label>
-                        <input type="number" id="initSmallBuns" placeholder="0" min="0">
-                    </div>
-                    <div class="inventory-item">
-                        <label>Tacos (placky):</label>
-                        <input type="number" id="initTacos" placeholder="0" min="0">
-                    </div>
-                    <div class="inventory-item">
-                        <label>Žebra sous-vide (kg):</label>
-                        <input type="number" id="initRibs" placeholder="0" min="0" step="0.1">
-                    </div>
-                </div>
-                <button id="saveInitialInventory" class="btn-primary">Uložit počáteční stavy</button>
-            </div>
-        </div>
-
-        <!-- Inventory Tab -->
-        <div id="inventory" class="tab-content">
-            <div class="card">
-                <h2>Aktuální zásoby</h2>
-                <div id="currentStock" class="stock-display">
-                    <div class="stock-item">
-                        <span class="stock-label">Velké bulky:</span>
-                        <span id="stockBigBuns" class="stock-value">0</span>
-                    </div>
-                    <div class="stock-item">
-                        <span class="stock-label">Malé bulky:</span>
-                        <span id="stockSmallBuns" class="stock-value">0</span>
-                    </div>
-                    <div class="stock-item">
-                        <span class="stock-label">Tacos:</span>
-                        <span id="stockTacos" class="stock-value">0</span>
-                    </div>
-                    <div class="stock-item">
-                        <span class="stock-label">Žebra (kg):</span>
-                        <span id="stockRibs" class="stock-value">0.0</span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Ribs Weight Loss -->
-            <div class="card">
-                <h2>Úbytek váhy žebra</h2>
-                <p class="info-text">Automatický odhad 15% úbytku po dopečení (250°C) a udržování (70°C, 30% páry)</p>
-                <div class="form-group">
-                    <label>Úbytek (%): <span id="ribsLossDisplay">15</span>%</label>
-                    <input type="range" id="ribsLoss" min="10" max="25" value="15" step="0.5">
-                </div>
-                <div class="stock-item">
-                    <span class="stock-label">Žebra po úbytku:</span>
-                    <span id="adjustedRibs" class="stock-value">0.0 kg</span>
-                </div>
-                <button id="applyRibsLoss" class="btn-secondary">Aplikovat úbytek</button>
-            </div>
-
-            <!-- Write-offs and Free Meals -->
-            <div class="card">
-                <h2>Odpisy a svačiny zdarma</h2>
-                <div class="action-buttons">
-                    <button id="showWriteOffs" class="btn-secondary">📝 Odpisy</button>
-                    <button id="showFreeMeals" class="btn-secondary">🍽️ Svačiny zdarma</button>
-                </div>
-
-                <!-- Write-offs Modal -->
-                <div id="writeOffsModal" class="modal">
-                    <div class="modal-content">
-                        <h3>Odpisy</h3>
-                        <div class="form-group">
-                            <label>Velké bulky:</label>
-                            <input type="number" id="writeOffBigBuns" placeholder="0" min="0">
-                        </div>
-                        <div class="form-group">
-                            <label>Malé bulky:</label>
-                            <input type="number" id="writeOffSmallBuns" placeholder="0" min="0">
-                        </div>
-                        <div class="form-group">
-                            <label>Tacos:</label>
-                            <input type="number" id="writeOffTacos" placeholder="0" min="0">
-                        </div>
-                        <div class="form-group">
-                            <label>Žebra (kg):</label>
-                            <input type="number" id="writeOffRibs" placeholder="0" min="0" step="0.1">
-                        </div>
-                        <div class="modal-buttons">
-                            <button id="saveWriteOffs" class="btn-primary">Uložit odpisy</button>
-                            <button id="cancelWriteOffs" class="btn-secondary">Zrušit</button>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Free Meals Modal -->
-                <div id="freeMealsModal" class="modal">
-                    <div class="modal-content">
-                        <h3>Svačiny zdarma</h3>
-                        <div class="form-group">
-                            <label>Velké bulky:</label>
-                            <input type="number" id="freeMealBigBuns" placeholder="0" min="0">
-                        </div>
-                        <div class="form-group">
-                            <label>Malé bulky:</label>
-                            <input type="number" id="freeMealSmallBuns" placeholder="0" min="0">
-                        </div>
-                        <div class="form-group">
-                            <label>Tacos:</label>
-                            <input type="number" id="freeMealTacos" placeholder="0" min="0">
-                        </div>
-                        <div class="form-group">
-                            <label>Žebra (kg):</label>
-                            <input type="number" id="freeMealRibs" placeholder="0" min="0" step="0.1">
-                        </div>
-                        <div class="modal-buttons">
-                            <button id="saveFreeMeals" class="btn-primary">Uložit svačiny</button>
-                            <button id="cancelFreeMeals" class="btn-secondary">Zrušit</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Sales Tab -->
-        <div id="sales" class="tab-content">
-            <div class="sales-grid">
-                <div class="sale-item">
-                    <h3>🌮 Tacos</h3>
-                    <div class="quantity-controls">
-                        <button class="qty-btn" data-item="tacos" data-action="decrease">-</button>
-                        <span id="tacosQty" class="quantity">1</span>
-                        <button class="qty-btn" data-item="tacos" data-action="increase">+</button>
-                    </div>
-                    <button class="btn-sale" data-item="tacos">Prodat tacos</button>
-                </div>
-
-                <div class="sale-item">
-                    <h3>🍔 Burger</h3>
-                    <div class="quantity-controls">
-                        <button class="qty-btn" data-item="burger" data-action="decrease">-</button>
-                        <span id="burgerQty" class="quantity">1</span>
-                        <button class="qty-btn" data-item="burger" data-action="increase">+</button>
-                    </div>
-                    <button class="btn-sale" data-item="burger">Prodat burger</button>
-                </div>
-
-                <div class="sale-item">
-                    <h3>🍔 Miniburger</h3>
-                    <div class="quantity-controls">
-                        <button class="qty-btn" data-item="miniburger" data-action="decrease">-</button>
-                        <span id="miniburgerQty" class="quantity">1</span>
-                        <button class="qty-btn" data-item="miniburger" data-action="increase">+</button>
-                    </div>
-                    <button class="btn-sale" data-item="miniburger">Prodat miniburger</button>
-                </div>
-
-                <div class="sale-item">
-                    <h3>🍖 Žebra</h3>
-                    <div class="form-group">
-                        <label>Váha (kg):</label>
-                        <input type="number" id="ribsWeight" placeholder="0.5" min="0.1" step="0.1">
-                    </div>
-                    <button class="btn-sale" data-item="ribs">Prodat žebra</button>
-                </div>
-            </div>
-
-            <!-- End Shift -->
-            <div class="card">
-                <h2>Konec směny</h2>
-                <div class="form-group">
-                    <label>Hotovost v pokladně na konci (Kč):</label>
-                    <input type="number" id="endCash" placeholder="0" min="0" step="0.01">
-                </div>
-                <button id="endShift" class="btn-primary">Ukončit směnu</button>
-            </div>
-        </div>
-
-        <!-- Reports Tab -->
-        <div id="reports" class="tab-content">
-            <div class="card">
-                <h2>📊 Grafy a statistiky</h2>
-                <div class="chart-container">
-                    <canvas id="salesChart"></canvas>
-                </div>
-                <div class="chart-container">
-                    <canvas id="writeOffsChart"></canvas>
-                </div>
-            </div>
-
-            <!-- Shift History -->
-            <div class="card">
-                <h2>Historie směn</h2>
-                <div id="shiftHistory" class="history-list">
-                    <!-- Historie směn se zobrazí zde -->
-                </div>
-            </div>
-        </div>
-
-        <!-- Status Bar -->
-        <div id="statusBar" class="status-bar">
-            <span id="connectionStatus">🟢 Online</span>
-            <span id="shiftStatus">Žádná aktivní směna</span>
-        </div>
-    </div>
-
-    <script src="app.js"></script>
-    <script>
-        // Register service worker
-        if (\'serviceWorker\' in navigator) {
-            window.addEventListener(\'load\', () => {
-                navigator.serviceWorker.register(\'service-worker.js\')
-                    .then(reg => console.log(\'SW registered\'))
-                    .catch(err => console.log(\'SW registration failed\'));
-            });
-        }
-    </script>
-</body>
-</html>
-
+🟢 Online Žádná aktivní směna
